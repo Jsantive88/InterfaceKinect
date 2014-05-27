@@ -19,10 +19,12 @@ Thumbs.db
 *.cache
 *.ilk
 *.log
+*.tlog
 [Bb]in
 [Dd]ebug*/
 *.lib
 *.sbr
+*.ipch
 obj/
 [Rr]elease*/
 _ReSharper*/
