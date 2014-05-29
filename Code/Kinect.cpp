@@ -1,4 +1,3 @@
-
 #include "stdafx.h"
 #include <comdef.h>
 #include <strsafe.h>
@@ -88,8 +87,7 @@ HRESULT initDepth() {
             2,
             m_hDepthEvent,
             &m_pStreamDepthHandle);
-
-    }
+    }	
 
     if (NULL == m_pNuiSensor || FAILED(hr)) {
         return E_FAIL;
@@ -381,7 +379,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 	m_bProcessColor = true;
 	m_bProcessDepth = true;
 	m_bUserDetection = true; // need to process depth
-	m_bProcessSkeleton = false;
+	m_bProcessSkeleton = true;
 
 	// App's functionalities: show acquired data in window, record data to disk, etc
 	m_bShow = true;
