@@ -11,6 +11,6 @@ TFG de Grado de Ingenieria Informatica UB.
 
 * Tecnologias utilizadas:
   =======================
-  - Kinect SDK
+  - Kinect SDK 1.8.0
   - PCL 1.6
-  - OpenCV
+  - OpenCV 2.4.9
