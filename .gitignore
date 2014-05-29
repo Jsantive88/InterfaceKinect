@@ -25,6 +25,15 @@ Thumbs.db
 *.lib
 *.sbr
 *.ipch
+*.bib
+*.aux
+*.bbl
+*.blg
+*.dvi
+*.ps
+*.toc
+*.tps
+*.asc
 obj/
 [Rr]elease*/
 _ReSharper*/
