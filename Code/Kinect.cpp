@@ -2,7 +2,7 @@
 #include <comdef.h>
 #include <strsafe.h>
 #include "Kinect.h"
-#include "conversion.h"
+
 
 HRESULT CreateFirstConnected() {
     INuiSensor * pNuiSensor;
@@ -35,12 +35,9 @@ HRESULT CreateFirstConnected() {
 
 	// Initialize the Kinect and specify that we'll be using depth
 	DWORD dwFlags = 0;
-	if (m_bProcessColor)
-		dwFlags |= NUI_INITIALIZE_FLAG_USES_COLOR;
-
+	if (m_bProcessColor) dwFlags |= NUI_INITIALIZE_FLAG_USES_COLOR;
 	if (m_bProcessDepth) 
 		m_bUserDetection ? (dwFlags |= NUI_INITIALIZE_FLAG_USES_DEPTH_AND_PLAYER_INDEX) : (dwFlags |= NUI_INITIALIZE_FLAG_USES_DEPTH);
-
 	if (m_bProcessSkeleton)
 		dwFlags |= NUI_INITIALIZE_FLAG_USES_SKELETON;
 
@@ -52,7 +49,7 @@ HRESULT initColor() {
 	HRESULT hr;
 
 	// Initialize Color Sensor
-    if (NULL != m_pNuiSensor) {
+    if (NULL != m_pNuiSensor){
 		// Create an event that will be signaled when color data is available
         m_hColorEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 
@@ -87,7 +84,8 @@ HRESULT initDepth() {
             2,
             m_hDepthEvent,
             &m_pStreamDepthHandle);
-    }	
+
+    }
 
     if (NULL == m_pNuiSensor || FAILED(hr)) {
         return E_FAIL;
@@ -136,12 +134,12 @@ HRESULT GetScreenshotFileName(wchar_t *screenshotName, UINT screenshotNameSize, 
     return hr;
 }
 
-void ProcessColor() {
+void ProcessColor(){
 	HRESULT hr;
 	NUI_IMAGE_FRAME imageFrame;
 
 	hr = m_pNuiSensor->NuiImageStreamGetNextFrame(m_pStreamColorHandle, 0, &imageFrame);
-	if (FAILED(hr)) {
+	if (FAILED(hr))	{
 		return;
 	}
 
@@ -159,7 +157,7 @@ void ProcessColor() {
 			uchar *ptr = colorFrame.ptr<uchar>(i);
 			uchar *pBuffer = (uchar*)(LockedRect.pBits) + i * LockedRect.Pitch;
 
-			for(int j = 0; j < cWidth; j++) {
+			for(int j = 0; j < cWidth; j++)	{
 				ptr[3*j] = pBuffer[4*j];
 				ptr[3*j+1] = pBuffer[4*j+1];
 				ptr[3*j+2] = pBuffer[4*j+2];
@@ -191,14 +189,67 @@ void ProcessColor() {
 	m_pNuiSensor->NuiImageStreamReleaseFrame(m_pStreamColorHandle, &imageFrame);
 }
 
+//void MapDepthToColor(const USHORT* depth, bool playerIndices, USHORT* alignedDepth, BYTE* alignedPlayerIndices, bool rmPlayerIndices)
+//{
+//    // Initialize aligned depth map and the corresponding user player indices map
+//    memset(alignedDepth, 0, cHeight * cWidth);
+//	if (playerIndices)
+//		memset(alignedPlayerIndices, 0, cHeight * cWidth);
+// 
+//    // loop over each row and column of depth
+//    for (int y = 0; y < cHeight; y++)
+//    {
+//        USHORT* depthRawPtr = (USHORT*) (depth + cWidth * y); // use a pointer
+//		USHORT* alignedDepthPtr = (USHORT*) (alignedDepth + cWidth * y); // use a pointer
+//		BYTE* alignedPlayerIndicesPtr = (BYTE*) (alignedPlayerIndices + cWidth * y); // use a pointer
+//        for (int x = 0; x < cWidth; x++)
+//        {
+//            USHORT draw = *(depthRawPtr++); // depth value of a depth map's (x,y)-located pixel
+//            USHORT d;
+//			BYTE playerIdx;
+//
+//			if (!playerIndices)
+//				d			= draw;
+//			else
+//			{
+//				d			= draw >> 3;
+//				playerIdx	= draw & NUI_IMAGE_PLAYER_INDEX_MASK;
+//			}
+//			
+//			USHORT daux = (d << 3);
+//
+//			LONG colorInDepthX, colorInDepthY; // corresponding coordinates of the depth pixel in the color image
+//            m_pNuiSensor->NuiImageGetColorPixelCoordinatesFromDepthPixelAtResolution(
+//                NUI_IMAGE_RESOLUTION_640x480,
+//                NUI_IMAGE_RESOLUTION_640x480,
+//                NULL,
+//                x, y,
+//                d, //(d << 3) & ~NUI_IMAGE_PLAYER_INDEX_MASK,
+//                &colorInDepthX, &colorInDepthY);
+//                       
+//            // make sure the depth pixel maps to a valid point in color space
+//            if ( colorInDepthX >= 0 && colorInDepthX < cWidth && colorInDepthY >= 0 && colorInDepthY < cHeight )
+//            {
+//				if (playerIndices && !rmPlayerIndices)
+//					d = (d << 3 & ~NUI_IMAGE_PLAYER_INDEX_MASK) + playerIdx; 
+//				*(alignedDepthPtr + colorInDepthY * (cWidth) + colorInDepthX) = d;
+//
+//				if (playerIndices)
+//					*(alignedPlayerIndices + colorInDepthY * (cWidth) + colorInDepthX) = playerIdx;
+//            }
+//        }
+//    }
+// 
+//    return;
+//}
 
-void MapDepthToColor(const USHORT* depth, USHORT* alignedDepth, BYTE* alignedPlayerIdx, bool rmPlayerBits) {
+void MapDepthToColor(const USHORT* depth, USHORT* alignedDepth, BYTE* alignedPlayerIdx, bool rmPlayerBits){
     // Initialize aligned depth map and the corresponding user player indices map
     memset(alignedDepth, 0, 2 * cHeight * cWidth);
     memset(alignedPlayerIdx, 0, cHeight * cWidth);
  
     // loop over each row and column of depth
-    for (int y = 0; y < cHeight; y++)  {
+    for (int y = 0; y < cHeight; y++) {
         const USHORT* sp = depth + cWidth * y; // use a pointer
         for (int x = 0; x < cWidth; x++, sp++) {
             USHORT d = *sp; // depth value of a depth map's (x,y)-located pixel
@@ -213,7 +264,7 @@ void MapDepthToColor(const USHORT* depth, USHORT* alignedDepth, BYTE* alignedPla
                 &colorInDepthX, &colorInDepthY);
                        
             // make sure the depth pixel maps to a valid point in color space
-            if ( colorInDepthX >= 0 && colorInDepthX < cWidth && colorInDepthY >= 0 && colorInDepthY < cHeight ) {
+            if ( colorInDepthX >= 0 && colorInDepthX < cWidth && colorInDepthY >= 0 && colorInDepthY < cHeight ){
                 *(alignedDepth + colorInDepthY * (cWidth) + colorInDepthX) = rmPlayerBits ? (d >> 3) : d;
                 *(alignedPlayerIdx + colorInDepthY * (cWidth) + colorInDepthX) = d & NUI_IMAGE_PLAYER_INDEX_MASK;
             }
@@ -223,7 +274,7 @@ void MapDepthToColor(const USHORT* depth, USHORT* alignedDepth, BYTE* alignedPla
     return;
 }
 
-void ProcessDepth() {
+void ProcessDepth(){
     HRESULT hr;
     NUI_IMAGE_FRAME imageFrame;
 
@@ -253,7 +304,7 @@ void ProcessDepth() {
 		USHORT* depthMap = new USHORT[cWidth * cHeight];
 		USHORT* p_depthMap = depthMap;
 
-        while ( pBufferRun < pBufferEnd ) {
+        while ( pBufferRun < pBufferEnd ){
 			*(p_depthMap++) = ((pBufferRun->depth << 3) & ~NUI_IMAGE_PLAYER_INDEX_MASK) + pBufferRun->playerIndex;
 
             // Increment our index into the Kinect's depth buffer
@@ -279,7 +330,7 @@ void ProcessDepth() {
 		}
 
 		// If m_bRecord
-		if (m_bRecord) {
+		if (m_bRecord){
 			// Retrieve the path to My Photos
             WCHAR screenshotPath[MAX_PATH];
 
@@ -307,7 +358,7 @@ ReleaseFrame:
 	m_pNuiSensor->NuiImageStreamReleaseFrame(m_pStreamDepthHandle, &imageFrame);
 }
 
-void ProcessSkeleton() {
+void ProcessSkeleton(){
 	NUI_SKELETON_FRAME skeletonFrame = {0};
 	
 	HRESULT hr = m_pNuiSensor->NuiSkeletonGetNextFrame(0, &skeletonFrame);
@@ -318,13 +369,13 @@ void ProcessSkeleton() {
     // smooth out the skeleton data
     m_pNuiSensor->NuiTransformSmooth(&skeletonFrame, NULL);
 
-	for (int i = 0 ; i < NUI_SKELETON_COUNT; ++i) {
+	for (int i = 0 ; i < NUI_SKELETON_COUNT; ++i){
         NUI_SKELETON_TRACKING_STATE trackingState = skeletonFrame.SkeletonData[i].eTrackingState;
 
         if (NUI_SKELETON_TRACKED == trackingState) {
 			if (m_bRecord){
 				fprintf(file, "%05d\n", m_bRecCounter);
-				for (int j = 0; j < 20; j++) {
+				for (int j = 0; j < 20; j++){
 					fprintf(file, "(%f,%f,%f) ", 
 						skeletonFrame.SkeletonData[i].SkeletonPositions[j].x,
 						skeletonFrame.SkeletonData[i].SkeletonPositions[j].y,
@@ -332,29 +383,36 @@ void ProcessSkeleton() {
 				}
 				fprintf(file, "\n");
 			}
+
         } else if (NUI_SKELETON_POSITION_ONLY == trackingState) {
-			// nada
+
 		}
 	}
 }
 
-void Update() {
-	if (NULL == m_pNuiSensor) {
+void Update(){
+	if (NULL == m_pNuiSensor){
         return;
-    } if ( (WAIT_OBJECT_0 == WaitForSingleObject(m_hColorEvent, 0)) && m_bProcessColor) {
+    }
+
+	if ( (WAIT_OBJECT_0 == WaitForSingleObject(m_hColorEvent, 0)) && m_bProcessColor){
         ProcessColor();
-    } if ( (WAIT_OBJECT_0 == WaitForSingleObject(m_hDepthEvent, 0)) && m_bProcessDepth ) {
+    }
+
+	if ( (WAIT_OBJECT_0 == WaitForSingleObject(m_hDepthEvent, 0)) && m_bProcessDepth ){
         ProcessDepth();
-    } if ( (WAIT_OBJECT_0 == WaitForSingleObject(m_hSkeletonEvent, 0)) && m_bProcessSkeleton ) {
+    }
+
+	if ( (WAIT_OBJECT_0 == WaitForSingleObject(m_hSkeletonEvent, 0)) && m_bProcessSkeleton ){
         ProcessSkeleton();
     }
 }
 
-void Run() {
+void Run(){
 	HANDLE hEvents[] = {m_hColorEvent, m_hDepthEvent, m_hSkeletonEvent}; 
 
     // Main loop
-	while (true) {
+	while (true){
 
         // Check to see if we have either a message (by passing in QS_ALLINPUT)
         // Or a Kinect event (hEvents)
@@ -362,9 +420,9 @@ void Run() {
         DWORD dwEvent = WaitForMultipleObjects(ARRAYSIZE(hEvents), hEvents, FALSE, INFINITE);
 
         // Check if this is an event we're waiting on and not a timeout or message
-        if (WAIT_OBJECT_0 == dwEvent) {
+        if (WAIT_OBJECT_0 == dwEvent){
             Update();
-			if (m_bRecord) {
+			if (m_bRecord){
 				m_bRecCounter++;
 			}
         }
@@ -374,12 +432,12 @@ void Run() {
 ///////
 // MAIN
 ///////
-int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow){
 	// Kinect's functionalities: color, depth (with user detection or not), and skeleton tracking
 	m_bProcessColor = true;
 	m_bProcessDepth = true;
 	m_bUserDetection = true; // need to process depth
-	m_bProcessSkeleton = true;
+	m_bProcessSkeleton = false;
 
 	// App's functionalities: show acquired data in window, record data to disk, etc
 	m_bShow = true;
