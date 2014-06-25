@@ -1,0 +1,84 @@
+%%%%%%%%%%
+%% Memoria del trabajo de final de carrera vision artificial 
+%% Titulo: Interfaz de interacción persona-máquina
+%% Facultat: Facultat de Matematicas (Universidad de Barcelona)
+%% Departamento: Matematicas Aplicadas
+%% Autor: Jorge Andrés Santillán Ventura
+%%%%%%%%%%
+
+%%%%%%%%%%%%% Configuración %%%%%%%%%%%%%%%%%%%%%%
+\input{config.tex} 
+%El fichero config.tex contiene:
+% 	Define los parámeros comunes a todo el documento (tipo de letra, tamaño, márgenes, etc.). También
+%   se incluyen los paquetes que el compilador necesita para manejar cosas "extrañas" como las figuras.
+
+\begin{document}
+\parindent 0cm  %elimina el indentado de párrafos
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Titulo & Agradecimientos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Portada.tex}  %Aquí van los agradecimientos
+
+\tableofcontents
+%\cleardoublepage
+\pagenumbering{roman}
+\pagestyle{plain} %define el formato de la cabecera
+\renewcommand{\contentsname}{Índice}  %Quitar el comentario a esta línea si se quiere que en lugar de "Contenidos" aparezca "Índice"
+\tableofcontents
+
+\cleardoublepage
+
+%Cambia el estilo del encabezado
+\pagenumbering{arabic}
+\pagestyle{fancy}
+\setlength{\headheight}{15pt}
+\fancyhf{}
+\fancyfoot[LE,RO]{\thepage}
+\fancyhead[LE,RO]{\nouppercase{\leftmark}}
+\renewcommand{\headrulewidth}{0.1pt} %Elimina la línea del encabezado
+
+
+%Aquí se deben ir incluyendo los ficheros que contienen cada uno de los capítulos y las referencias y apéndices (si los hubiere)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Introduccion
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Introduccion.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Objetivos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Objetivos.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Desarrollo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Desarrollo.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% PruebasResultados
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{PruebasResultados.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Conclusiones
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Conclusiones.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Apendice
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\input{Apendice.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Referencias
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\input{Referencias.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Inclusión de la lista de acrónimos
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{Acronimos.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}

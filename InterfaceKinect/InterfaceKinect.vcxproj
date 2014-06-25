@@ -117,11 +117,13 @@
   <ItemGroup>
     <ClCompile Include="..\Code\conversion.cpp" />
     <ClCompile Include="..\Code\Kinect.cpp" />
+    <ClCompile Include="..\Code\transformsPCL.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Code\conversion.h" />
     <ClInclude Include="..\Code\Kinect.h" />
     <ClInclude Include="..\Code\stdafx.h" />
+    <ClInclude Include="..\Code\transformsPCL.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

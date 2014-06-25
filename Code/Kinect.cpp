@@ -1,9 +1,11 @@
-#include "stdafx.h"
 #include <comdef.h>
 #include <strsafe.h>
 #include "Kinect.h"
 
-
+/// <summary>
+/// 
+/// </summary>
+/// <returns>HRESULT</returns>
 HRESULT CreateFirstConnected() {
     INuiSensor * pNuiSensor;
     HRESULT hr;
@@ -45,6 +47,10 @@ HRESULT CreateFirstConnected() {
     return hr;
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <returns>HRESULT</returns>
 HRESULT initColor() {
 	HRESULT hr;
 
@@ -68,6 +74,10 @@ HRESULT initColor() {
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <returns>HRESULT</returns>
 HRESULT initDepth() {
 	HRESULT hr;
 
@@ -92,6 +102,10 @@ HRESULT initDepth() {
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <returns>HRESULT</returns>
 HRESULT initSkeleton() {
 	HRESULT hr;
 	// Initialize Skeleton Sensor
@@ -113,6 +127,13 @@ HRESULT initSkeleton() {
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
+/// <param name="wchar_t">handle to the application instance</param>
+/// <param name="UINT">always 0</param>
+/// <param name="int">command line arguments</param>
+/// <returns>HRESULT</returns>
 HRESULT GetScreenshotFileName(wchar_t *screenshotName, UINT screenshotNameSize, int frameType) {
     wchar_t *knownPath = NULL;
     HRESULT hr = SHGetKnownFolderPath(FOLDERID_Pictures, 0, NULL, &knownPath);
@@ -134,6 +155,10 @@ HRESULT GetScreenshotFileName(wchar_t *screenshotName, UINT screenshotNameSize, 
     return hr;
 }
 
+
+/// <summary>
+/// 
+/// </summary>
 void ProcessColor(){
 	HRESULT hr;
 	NUI_IMAGE_FRAME imageFrame;
@@ -189,60 +214,63 @@ void ProcessColor(){
 	m_pNuiSensor->NuiImageStreamReleaseFrame(m_pStreamColorHandle, &imageFrame);
 }
 
-//void MapDepthToColor(const USHORT* depth, bool playerIndices, USHORT* alignedDepth, BYTE* alignedPlayerIndices, bool rmPlayerIndices)
-//{
-//    // Initialize aligned depth map and the corresponding user player indices map
-//    memset(alignedDepth, 0, cHeight * cWidth);
-//	if (playerIndices)
-//		memset(alignedPlayerIndices, 0, cHeight * cWidth);
-// 
-//    // loop over each row and column of depth
-//    for (int y = 0; y < cHeight; y++)
-//    {
-//        USHORT* depthRawPtr = (USHORT*) (depth + cWidth * y); // use a pointer
-//		USHORT* alignedDepthPtr = (USHORT*) (alignedDepth + cWidth * y); // use a pointer
-//		BYTE* alignedPlayerIndicesPtr = (BYTE*) (alignedPlayerIndices + cWidth * y); // use a pointer
-//        for (int x = 0; x < cWidth; x++)
-//        {
-//            USHORT draw = *(depthRawPtr++); // depth value of a depth map's (x,y)-located pixel
-//            USHORT d;
-//			BYTE playerIdx;
-//
-//			if (!playerIndices)
-//				d			= draw;
-//			else
-//			{
-//				d			= draw >> 3;
-//				playerIdx	= draw & NUI_IMAGE_PLAYER_INDEX_MASK;
-//			}
-//			
-//			USHORT daux = (d << 3);
-//
-//			LONG colorInDepthX, colorInDepthY; // corresponding coordinates of the depth pixel in the color image
-//            m_pNuiSensor->NuiImageGetColorPixelCoordinatesFromDepthPixelAtResolution(
-//                NUI_IMAGE_RESOLUTION_640x480,
-//                NUI_IMAGE_RESOLUTION_640x480,
-//                NULL,
-//                x, y,
-//                d, //(d << 3) & ~NUI_IMAGE_PLAYER_INDEX_MASK,
-//                &colorInDepthX, &colorInDepthY);
-//                       
-//            // make sure the depth pixel maps to a valid point in color space
-//            if ( colorInDepthX >= 0 && colorInDepthX < cWidth && colorInDepthY >= 0 && colorInDepthY < cHeight )
-//            {
-//				if (playerIndices && !rmPlayerIndices)
-//					d = (d << 3 & ~NUI_IMAGE_PLAYER_INDEX_MASK) + playerIdx; 
-//				*(alignedDepthPtr + colorInDepthY * (cWidth) + colorInDepthX) = d;
-//
-//				if (playerIndices)
-//					*(alignedPlayerIndices + colorInDepthY * (cWidth) + colorInDepthX) = playerIdx;
-//            }
-//        }
-//    }
-// 
-//    return;
-//}
+void MapDepthToColor(const USHORT* depth, bool playerIndices, USHORT* alignedDepth, BYTE* alignedPlayerIndices, bool rmPlayerIndices) {
+    // Initialize aligned depth map and the corresponding user player indices map
+    memset(alignedDepth, 0, cHeight * cWidth);
+	if (playerIndices)
+		memset(alignedPlayerIndices, 0, cHeight * cWidth);
+ 
+    // loop over each row and column of depth
+    for (int y = 0; y < cHeight; y++)
+    {
+        USHORT* depthRawPtr = (USHORT*) (depth + cWidth * y); // use a pointer
+		USHORT* alignedDepthPtr = (USHORT*) (alignedDepth + cWidth * y); // use a pointer
+		BYTE* alignedPlayerIndicesPtr = (BYTE*) (alignedPlayerIndices + cWidth * y); // use a pointer
+        for (int x = 0; x < cWidth; x++) {
+            USHORT draw = *(depthRawPtr++); // depth value of a depth map's (x,y)-located pixel
+            USHORT d;
+			BYTE playerIdx;
 
+			if (!playerIndices){
+				d			= draw;
+			} else {
+				d			= draw >> 3;
+				playerIdx	= draw & NUI_IMAGE_PLAYER_INDEX_MASK;
+			}
+			
+			USHORT daux = (d << 3);
+
+			LONG colorInDepthX, colorInDepthY; // corresponding coordinates of the depth pixel in the color image
+            m_pNuiSensor->NuiImageGetColorPixelCoordinatesFromDepthPixelAtResolution(
+                NUI_IMAGE_RESOLUTION_640x480,
+                NUI_IMAGE_RESOLUTION_640x480,
+                NULL,
+                x, y,
+                d, //(d << 3) & ~NUI_IMAGE_PLAYER_INDEX_MASK,
+                &colorInDepthX, &colorInDepthY);
+                       
+            // make sure the depth pixel maps to a valid point in color space
+            if ( colorInDepthX >= 0 && colorInDepthX < cWidth && colorInDepthY >= 0 && colorInDepthY < cHeight ) {
+				if (playerIndices && !rmPlayerIndices)
+					d = (d << 3 & ~NUI_IMAGE_PLAYER_INDEX_MASK) + playerIdx; 
+				*(alignedDepthPtr + colorInDepthY * (cWidth) + colorInDepthX) = d;
+
+				if (playerIndices)
+					*(alignedPlayerIndices + colorInDepthY * (cWidth) + colorInDepthX) = playerIdx;
+            }
+        }
+    }
+ 
+    return;
+}
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="USHORT">handle to the application instance</param>
+/// <param name="USHORT">always 0</param>
+/// <param name="BYTE">handle to the application instance</param>
+/// <param name="bool">always 0</param>
 void MapDepthToColor(const USHORT* depth, USHORT* alignedDepth, BYTE* alignedPlayerIdx, bool rmPlayerBits){
     // Initialize aligned depth map and the corresponding user player indices map
     memset(alignedDepth, 0, 2 * cHeight * cWidth);
@@ -274,6 +302,9 @@ void MapDepthToColor(const USHORT* depth, USHORT* alignedDepth, BYTE* alignedPla
     return;
 }
 
+/// <summary>
+/// 
+/// </summary>
 void ProcessDepth(){
     HRESULT hr;
     NUI_IMAGE_FRAME imageFrame;
@@ -358,6 +389,9 @@ ReleaseFrame:
 	m_pNuiSensor->NuiImageStreamReleaseFrame(m_pStreamDepthHandle, &imageFrame);
 }
 
+/// <summary>
+/// 
+/// </summary>
 void ProcessSkeleton(){
 	NUI_SKELETON_FRAME skeletonFrame = {0};
 	
@@ -390,6 +424,9 @@ void ProcessSkeleton(){
 	}
 }
 
+/// <summary>
+/// 
+/// </summary>
 void Update(){
 	if (NULL == m_pNuiSensor){
         return;
@@ -408,6 +445,9 @@ void Update(){
     }
 }
 
+/// <summary>
+/// 
+/// </summary>
 void Run(){
 	HANDLE hEvents[] = {m_hColorEvent, m_hDepthEvent, m_hSkeletonEvent}; 
 
@@ -432,6 +472,14 @@ void Run(){
 ///////
 // MAIN
 ///////
+/// <summary>
+/// 
+/// </summary>
+/// <param name="HINSTANCE">handle to the application instance</param>
+/// <param name="HINSTANCE">always 0</param>
+/// <param name="LPWSTR">handle to the application instance</param>
+/// <param name="int">always 0</param>
+/// <returns>int</returns>
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow){
 	// Kinect's functionalities: color, depth (with user detection or not), and skeleton tracking
 	m_bProcessColor = true;

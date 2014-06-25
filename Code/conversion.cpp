@@ -1,9 +1,9 @@
 #include "conversion.h"
+#include "transformsPCL.h"
 
 #include <math.h>
 
-void ProjectiveToRealworld(pcl::PointXYZ p, int xres, int yres, pcl::PointXYZ& rw)
-{
+void ProjectiveToRealworld(pcl::PointXYZ p, int xres, int yres, pcl::PointXYZ& rw){
     float invfocal = (1/285.63f) / (xres/320.f);
     
     rw.x = ((p.x - xres/2) * invfocal * p.z) / 1000.f,
@@ -11,8 +11,7 @@ void ProjectiveToRealworld(pcl::PointXYZ p, int xres, int yres, pcl::PointXYZ& r
     rw.z = p.z / 1000.f;
 }
 
-void RealworldToProjective(pcl::PointXYZ rw, int xres, int yres, pcl::PointXYZ& p)
-{
+void RealworldToProjective(pcl::PointXYZ rw, int xres, int yres, pcl::PointXYZ& p){
     float invfocal = (1/285.63f) / (xres/320.f);
     
     p.x = (int) ( ((rw.x) / (invfocal * rw.z)) + (xres / 2.f) );
@@ -20,16 +19,14 @@ void RealworldToProjective(pcl::PointXYZ rw, int xres, int yres, pcl::PointXYZ& 
     p.z = rw.z * 1000.f;
 }
 
-void ProjectiveToRealworld(pcl::PointCloud<pcl::PointXYZ>::Ptr pProjCloud, pcl::PointCloud<pcl::PointXYZ>& realCloud)
-{
+void ProjectiveToRealworld(pcl::PointCloud<pcl::PointXYZ>::Ptr pProjCloud, pcl::PointCloud<pcl::PointXYZ>& realCloud){
     realCloud.height = pProjCloud->height;
     realCloud.width  = pProjCloud->width;
     realCloud.resize( pProjCloud->height * pProjCloud->width );
     
     float invfocal = (1/285.63f) / (realCloud.width/320.f);
     
-    for (unsigned int y = 0; y < realCloud.height; y++) for (unsigned int x = 0; x < realCloud.width; x++)
-    {
+    for (unsigned int y = 0; y < realCloud.height; y++) for (unsigned int x = 0; x < realCloud.width; x++) {
         pcl::PointXYZ realPoint;
         realPoint.x = ((x - realCloud.width/2) * invfocal * pProjCloud->at(x,y).z) / 1000.f,
         realPoint.y = ((y - realCloud.height/2) * invfocal * pProjCloud->at(x,y).z) / 1000.f,
@@ -39,16 +36,14 @@ void ProjectiveToRealworld(pcl::PointCloud<pcl::PointXYZ>::Ptr pProjCloud, pcl::
     }
 }
 
-void RealworldToProjective(pcl::PointCloud<pcl::PointXYZ>::Ptr pRealCloud, pcl::PointCloud<pcl::PointXYZ>& projCloud)
-{
+void RealworldToProjective(pcl::PointCloud<pcl::PointXYZ>::Ptr pRealCloud, pcl::PointCloud<pcl::PointXYZ>& projCloud){
     projCloud.height = pRealCloud->height;
     projCloud.width  = pRealCloud->width;
     projCloud.resize( pRealCloud->height * pRealCloud->width );
     
     float invfocal = (1/285.63f) / (projCloud.width/320.f);
     
-    for (unsigned int y = 0; y < projCloud.height; y++) for (unsigned int x = 0; x < projCloud.width; x++)
-    {
+    for (unsigned int y = 0; y < projCloud.height; y++) for (unsigned int x = 0; x < projCloud.width; x++) {
         pcl::PointXYZ projPoint;
         projPoint.x = (int) ( ((pRealCloud->at(x,y).x) / (invfocal * pRealCloud->at(x,y).z)) + (projCloud.width / 2.f) );
         projPoint.y = (int) ( ((pRealCloud->at(x,y).y) / (invfocal * pRealCloud->at(x,y).z)) + (projCloud.height / 2.f) );
@@ -58,15 +53,13 @@ void RealworldToProjective(pcl::PointCloud<pcl::PointXYZ>::Ptr pRealCloud, pcl::
     }
 }
 
-void EigenToPointXYZ(Eigen::Vector4f eigen, pcl::PointXYZ& p)
-{
+void EigenToPointXYZ(Eigen::Vector4f eigen, pcl::PointXYZ& p){
     p.x = eigen.x();
     p.y = eigen.y();
     p.z = eigen.z();
 }
 
-pcl::PointXYZ EigenToPointXYZ(Eigen::Vector4f eigen)
-{
+pcl::PointXYZ EigenToPointXYZ(Eigen::Vector4f eigen){
     pcl::PointXYZ p;
     
     p.x = eigen.x();
@@ -76,8 +69,7 @@ pcl::PointXYZ EigenToPointXYZ(Eigen::Vector4f eigen)
     return p;
 }
 
-void MatToPointCloud(cv::Mat& mat, pcl::PointCloud<pcl::PointXYZ>& cloud)
-{
+void MatToPointCloud(cv::Mat& mat, pcl::PointCloud<pcl::PointXYZ>& cloud) {
 	cloud.height = mat.rows;
     cloud.width =  mat.cols;
     cloud.resize(cloud.height * cloud.width);
@@ -89,8 +81,7 @@ void MatToPointCloud(cv::Mat& mat, pcl::PointCloud<pcl::PointXYZ>& cloud)
 	float rwx, rwy, rwz;
 	pcl::PointXYZ p;
     
-    for (unsigned int y = 0; y < cloud.height; y++) for (unsigned int x = 0; x < cloud.width; x++)
-    {
+    for (unsigned int y = 0; y < cloud.height; y++) for (unsigned int x = 0; x < cloud.width; x++) {
 		//z_us = mat.at<unsigned short>(y,x) >> 3;
 		z = (float) mat.at<unsigned short>(y,x) /*z_us*/;
         
@@ -105,8 +96,7 @@ void MatToPointCloud(cv::Mat& mat, pcl::PointCloud<pcl::PointXYZ>& cloud)
     }
 }
 
-void MatToColoredPointCloud(cv::Mat& depth, cv::Mat& color, pcl::PointCloud<pcl::PointXYZRGB>& cloud)
-{
+void MatToColoredPointCloud(cv::Mat& depth, cv::Mat& color, pcl::PointCloud<pcl::PointXYZRGB>& cloud) {
 	cloud.height = depth.rows;
     cloud.width =  depth.cols;
     cloud.resize(cloud.height * cloud.width);
@@ -118,8 +108,7 @@ void MatToColoredPointCloud(cv::Mat& depth, cv::Mat& color, pcl::PointCloud<pcl:
 	float rwx, rwy, rwz;
 	pcl::PointXYZRGB p;
     
-    for (unsigned int y = 0; y < cloud.height; y++) for (unsigned int x = 0; x < cloud.width; x++)
-    {
+    for (unsigned int y = 0; y < cloud.height; y++) for (unsigned int x = 0; x < cloud.width; x++) {
 		//z_us = mat.at<unsigned short>(y,x) >> 3;
 		z = (float) depth.at<unsigned short>(y,x) /*z_us*/;
         
@@ -140,8 +129,7 @@ void MatToColoredPointCloud(cv::Mat& depth, cv::Mat& color, pcl::PointCloud<pcl:
     }
 }
 
-void MatToPointCloud(cv::Mat& mat, cv::Mat& mask, pcl::PointCloud<pcl::PointXYZ>& cloud)
-{
+void MatToPointCloud(cv::Mat& mat, cv::Mat& mask, pcl::PointCloud<pcl::PointXYZ>& cloud) {
 	cloud.height = mat.rows;
     cloud.width =  mat.cols;
     cloud.resize(cloud.height * cloud.width);
@@ -158,8 +146,7 @@ void MatToPointCloud(cv::Mat& mat, cv::Mat& mask, pcl::PointCloud<pcl::PointXYZ>
 	float rwx, rwy, rwz;
 	pcl::PointXYZ p;
 
-    for (unsigned int y = 0; y < cloud.height; y++) for (unsigned int x = 0; x < cloud.width; x++)
-    {
+    for (unsigned int y = 0; y < cloud.height; y++) for (unsigned int x = 0; x < cloud.width; x++) {
 		z = (mask.at<unsigned char>(y,x) == 255) ? ((float) mat.at<unsigned short>(y,x)) : 0;
              
 		rwx = (x - 320.0) * invfocal * z;
@@ -174,28 +161,24 @@ void MatToPointCloud(cv::Mat& mat, cv::Mat& mask, pcl::PointCloud<pcl::PointXYZ>
 }
 
 
-void PointCloudToMat(pcl::PointCloud<pcl::PointXYZ>& cloud, cv::Mat& mat)
-{
+void PointCloudToMat(pcl::PointCloud<pcl::PointXYZ>& cloud, cv::Mat& mat) {
 	mat = cv::Mat::zeros(cloud.height, cloud.width, CV_16UC1);
     
     float invfocal = (1/285.63f) / (mat.cols/320.f); // Kinect inverse focal length. If depth map resolution
     
-    for (unsigned int i = 0; i < cloud.points.size(); i++)
-    {
+    for (unsigned int i = 0; i < cloud.points.size(); i++) {
         float rwx = cloud.points[i].x;
         float rwy = cloud.points[i].y;
         float rwz = cloud.points[i].z;
             
         float x, y, z;
     
-        if (rwz > 0)
-        {
+        if (rwz > 0) {
             z = rwz * 1000.f;
 			x = std::floor( ((rwx ) / (invfocal * rwz )) + (cloud.width / 2.f) );
 			y = std::floor( ((rwy ) / (invfocal * rwz )) + (cloud.height / 2.f) );
 
-			if (x > 0 && x < cloud.width && y > 0 && y < cloud.height)
-            {
+			if (x > 0 && x < cloud.width && y > 0 && y < cloud.height) {
                 mat.at<unsigned short>(y,x) = z;
             }
         }
@@ -203,20 +186,17 @@ void PointCloudToMat(pcl::PointCloud<pcl::PointXYZ>& cloud, cv::Mat& mat)
 }
 
 
-void MaskDensePointCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr pCloudSrc, cv::Mat maskMat, 
-	pcl::PointCloud<pcl::PointXYZ>& cloudTgt)
-{
-	for (unsigned int y = 0; y < pCloudSrc->height; y++) for (unsigned int x = 0; x < pCloudSrc->width; x++)
-	{
+void MaskDensePointCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr pCloudSrc, cv::Mat maskMat, pcl::PointCloud<pcl::PointXYZ>& cloudTgt) {
+	for (unsigned int y = 0; y < pCloudSrc->height; y++) for (unsigned int x = 0; x < pCloudSrc->width; x++) {
 		unsigned char maskValue;
 
-		if (maskMat.type() == CV_8U || maskMat.type() == CV_8UC1)
+		if (maskMat.type() == CV_8U || maskMat.type() == CV_8UC1) {
 			maskValue = maskMat.at<unsigned char>(y,x);
-		else if (maskMat.type() == CV_32F || maskMat.type() == CV_32FC1)
+		} else if (maskMat.type() == CV_32F || maskMat.type() == CV_32FC1) {
 			maskValue = static_cast<unsigned char>(maskMat.at<float>(y,x));
+		}
 
-		if (maskValue > 0)
-		{
+		if (maskValue > 0) {
 			cloudTgt.points.push_back(pCloudSrc->points[y * pCloudSrc->width + x]);
 		}
 	}
@@ -227,9 +207,7 @@ void MaskDensePointCloud(pcl::PointCloud<pcl::PointXYZ>::Ptr pCloudSrc, cv::Mat 
 }
 
 
-void passthroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr pCloud, pcl::PointXYZ min, pcl::PointXYZ max, 
-	pcl::PointCloud<pcl::PointXYZ>& cloudF)
-{
+void passthroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr pCloud, pcl::PointXYZ min, pcl::PointXYZ max, pcl::PointCloud<pcl::PointXYZ>& cloudF) {
 	cloudF = *pCloud;
 	pcl::PointCloud<pcl::PointXYZ>::Ptr pCloudF (&cloudF);
 
@@ -252,8 +230,7 @@ void passthroughFilter(pcl::PointCloud<pcl::PointXYZ>::Ptr pCloud, pcl::PointXYZ
 }
 
 
-void enclosure(cv::Mat src, cv::Mat& dst, int size)
-{
+void enclosure(cv::Mat src, cv::Mat& dst, int size) {
 	// Erode and dilate mask
 	int erosion_size = size;
 	int dilation_size = size;
@@ -270,9 +247,7 @@ void enclosure(cv::Mat src, cv::Mat& dst, int size)
 }
 
 
-void biggestEuclideanCluster(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTol,
-	pcl::PointCloud<pcl::PointXYZ>& cluster)
-{
+void biggestEuclideanCluster(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float clusterTol, pcl::PointCloud<pcl::PointXYZ>& cluster) {
 	// Creating the KdTree object for the search method of the extraction
 	pcl::search::KdTree<pcl::PointXYZ>::Ptr tree (new pcl::search::KdTree<pcl::PointXYZ>);
 	tree->setInputCloud (cloud);
@@ -298,7 +273,6 @@ void biggestEuclideanCluster(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, float cl
 }
 
 
-float euclideanDistance(Eigen::Vector4f u, Eigen::Vector4f v)
-{
+float euclideanDistance(Eigen::Vector4f u, Eigen::Vector4f v) {
 	return std::sqrtf(std::powf(u.x() - v.x(), 2) + std::powf(u.y() - v.y(), 2) + std::powf(u.z() - v.z(), 2));
 }

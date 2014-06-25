@@ -1,0 +1,115 @@
+% ------------------------------------------------------------------------
+%												CONFIGURACIÓN
+% ------------------------------------------------------------------------
+%
+\documentclass[12pt,a4paper,spanish]{book}
+%
+%----------------------------------------------------------
+% This is a sample document for the standard LaTeX Book Class
+% Class options
+%       --  Body text point size:
+%                        10pt (default), 11pt, 12pt
+%       --  Paper size:  letterpaper (8.5x11 inch, default)
+%                        a4paper, a5paper, b5paper,
+%                        legalpaper, executivepaper
+%       --  Orientation (portrait is the default):
+%                        landscape
+%       --  Printside:   oneside, twoside (default)
+%       --  Quality:     final(default), draft
+%       --  Title page:  titlepage, notitlepage
+%       --  Columns:     onecolumn (default), twocolumn
+%       --  Start chapter on left:
+%                        openright(no, default), openany
+%       --  Equation numbering (equation numbers on right is the default):
+%                        leqno
+%       --  Displayed equations (centered is the default):
+%                        fleqn (flush left)
+%       --  Open bibliography style (closed bibliography is the default):
+%                        openbib
+% For instance the command
+%          \documentclass[a4paper,12pt,reqno]{book}
+% ensures that the paper size is a4, fonts are typeset at the size 12p
+% and the equation numbers are on the right side.
+
+\usepackage{amsmath,amssymb,amsfonts,mathrsfs}
+\usepackage{graphicx}
+\usepackage{anysize}
+%\usepackage[utf8]{inputenc}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}  %Quita el comentario a esta línea y comenta la siguiente si quieres que los números romanos aparezcan en mayúsculas
+%\usepackage[spanish, es-lcroman]{babel} 
+\usepackage[bf]{caption}
+\usepackage{subfigure}
+\usepackage{rotating}
+\usepackage{fontenc}
+%\usepackage{mathaccent}
+\usepackage{titlesec}
+\usepackage{multirow} %Para poder centrar verticalmente el contenido de las celdas de una tabla
+\usepackage{fancyhdr} %Para personalizar los encabezados y pies de página
+\usepackage{acronym}  %Para expandir automáticamente los acrónimos
+\usepackage[titletoc]{appendix} %Para que cambie el título y la forma de numerar los apéndices
+
+
+%Define el formato de los encabezados y pies de página del índice y la lista de acrónimos
+\fancypagestyle{plain}{ %Encabezado y pie para el índice y acrónimos
+ \fancyhf{}  %Elimina encabezdo y pie (menos la línea del encabezado)
+ \renewcommand{\headrulewidth}{0pt} %Elimina la línea del encabezado
+ \fancyfoot[LE,RO]{\thepage}
+}
+
+\marginsize{2.5cm}{2.5cm}{2.5cm}{2.5cm} %Margenes pagina
+
+\linespread{1.5} %Espaciado entre lineas
+
+% Esto es para redefinir los títulos que Latex pone por defecto
+%\addto\captionsspanish{\renewcommand{\contentsname}{Contenido}}
+\renewcommand{\tablename}{Tabla}
+
+%Esto es para redefinir el formato en que se presenta el título de los capítulos
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\fontsize{24}{60} Capítulo \thechapter{. }}{0pt}{\fontsize{24}{60}}
+
+
+\newcommand{\reff}[1]{Figura \ref{#1}}
+\newcommand{\refe}[1]{(\ref{#1})}
+\renewcommand{\captionfont}{\small}
+
+%Si el idioma es español las listas aparecen con un cuadradito.
+%En inglés aparecen con un bullet...Esto redefine el bullet a cuadrado.
+\renewcommand{\labelitemi}{\tiny{$^\blacksquare$}}
+
+%\renewcommand{\figurename}{Fig.}
+
+\hyphenation{mo-du-la-tion pa-ra-me-te-ri-zed res-pon-se cha-rac-ter par-ti-cu-la-ri-zing de-ve-lo-ped a-ve-ra-ging pro-ba-bi-li-ty me-cha-nism par-ti-cu-lar know-led-ge pro-ducts inter-operable to-po-lo-gy cha-rac-te-ri-zed stra-te-gy rea-li-za-da si-mu-la-cio-nes pro-pues-tas pro-pues-to cen-tra-li-za-das igua-la-do-res su-mi-nis-tro va-lo-ra-do in-ter-fe-ren-cia par-ti-cu-la-ri-ties mul-ti-plexing ins-ti-tu-te ca-rri-er maxi-mum} %es un modo burdo de definir como romper una palabra
+
+%\sloppy %permite que sea permisivo con las líneas sueltas
+
+
+%%Para que las viñetas del segundo nivel aparezcan como a),b)...y no (a), (b)
+\renewcommand{\theenumii}{\alph{enumii}}
+\renewcommand{\labelenumii}{\textsf{\theenumii})}
+
+
+%%----------------------------------------------------------
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{acknowledgement}[theorem]{Acknowledgement}
+%\newtheorem{algorithm}[theorem]{Algorithm}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{case}[theorem]{Case}
+%\newtheorem{claim}[theorem]{Claim}
+%\newtheorem{conclusion}[theorem]{Conclusion}
+%\newtheorem{condition}[theorem]{Condition}
+%\newtheorem{conjecture}[theorem]{Conjecture}
+%\newtheorem{corollary}[theorem]{Corollary}
+%\newtheorem{criterion}[theorem]{Criterion}
+%\newtheorem{definition}[theorem]{Definition}
+%\newtheorem{example}[theorem]{Example}
+%\newtheorem{exercise}[theorem]{Exercise}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{notation}[theorem]{Notation}
+%\newtheorem{problem}[theorem]{Problem}
+%\newtheorem{proposition}[theorem]{Proposition}
+%\newtheorem{remark}[theorem]{Remark}
+%\newtheorem{solution}[theorem]{Solution}
+%\newtheorem{summary}[theorem]{Summary}
+%\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+%%----------------------------------------------------------
