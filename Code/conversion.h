@@ -5,11 +5,11 @@
 
 // PCL
 #include <pcl/point_types.h>
-#include <pcl/point_cloud.h>
-#include <pcl/filters/passthrough.h>
-#include <pcl/kdtree/kdtree.h>
-#include <pcl/segmentation/extract_clusters.h>
-#include <pcl/filters/extract_indices.h>
+//#include <pcl/point_cloud.h>
+//#include <pcl/filters/passthrough.h>
+//#include <pcl/kdtree/kdtree.h>
+//#include <pcl/segmentation/extract_clusters.h>
+//#include <pcl/filters/extract_indices.h>
 
 void ProjectiveToRealworld(pcl::PointXYZ p, int xres, int yres, pcl::PointXYZ& rw);
 

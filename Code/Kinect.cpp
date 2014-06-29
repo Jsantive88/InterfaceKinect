@@ -3,9 +3,9 @@
 #include "Kinect.h"
 
 /// <summary>
-/// 
+/// Funcion que crea la primera conexion de la aplicacion con Kinect. Comprueba e inicializa los sensores.
 /// </summary>
-/// <returns>HRESULT</returns>
+/// <returns>Devuelve un HRESULT con las banderas de los flags inicializados y los que no.</returns>
 HRESULT CreateFirstConnected() {
     INuiSensor * pNuiSensor;
     HRESULT hr;
