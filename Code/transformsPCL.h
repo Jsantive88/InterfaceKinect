@@ -10,6 +10,6 @@ using namespace pcl;
 
 PointXYZ minCloudDepth (PointCloud<PointXYZRGBA>::ConstPtr &cloud);
 
-void rectaRegre (PointCloud<PointXYZRGBA>::ConstPtr &cloud, PointXYZ pointJoin);
-
 PointXYZ centralSection (PointCloud<PointXYZRGBA>::ConstPtr &section);
+
+PointCloud<PointXYZ>* rectaRegre (PointCloud<PointXYZRGBA>::ConstPtr &cloud, PointXYZ pointJoin);
